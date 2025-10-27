@@ -11,7 +11,16 @@ build-no-cache:
 terminal:
 	docker run -it --rm \
 		--env-file .env \
-		-v "$(PWD)/src":/app \
+		-e PYTHONPATH=/app \
+		-v "$(PWD)/app":/app \
 		--workdir /app \
 		--name $(CONTAINER_NAME) \
-		$(IMAGE_NAME) /bin/sh
+		$(IMAGE_NAME) bash
+
+test:
+	docker run --rm \
+		--env-file .env \
+		-e PYTHONPATH=/app \
+		-v "$(PWD)/app":/app \
+		--workdir /app \
+		$(IMAGE_NAME) pytest -v
