@@ -1,3 +1,6 @@
 .git
 .env
 TODO.md
+document.txt
+__pycache__
+*.pyc
