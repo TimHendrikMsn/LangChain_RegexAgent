@@ -55,3 +55,9 @@ class Settings(BaseSettings):
 
 # Instantiate global settings object
 settings = Settings()
+build_regex_settings = Settings(
+    model_name="gpt-5-nano",
+    temperature=0.7,
+    max_tokens=50000
+)
+test_settings = Settings(document_path="data/test_doc.txt")
