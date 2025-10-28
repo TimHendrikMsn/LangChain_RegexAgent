@@ -20,7 +20,6 @@ def test_invoke_case_sensitive_pattern():
 def test_match_starting_with_gl():
     regex = build_regex.invoke({"question": "Create a regex pattern for all words starting with the prefix 'gl'.", "flags_hint": "case-insensitive"})
     assert isinstance(regex, str)
-    print(f"Generated regex: {regex}")
     result = run_regex.invoke({"pattern": rf"{regex}", "match_type": "all", "settings": test_settings})
     assert result["count"] == 6
 
