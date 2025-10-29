@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Literal, Union
+from typing import Optional, Literal, Union, List
 from src.settings import Settings
 
 # Schemas for tool arguments
@@ -10,6 +10,13 @@ class RunRegexArgs(BaseModel):
     match_type: Literal["all", "first", "last"] = Field(
         "all",
         description="The type of match to perform. 'all' returns all matches, 'first'")
+    flags: List[Literal["I", "M", "S"]] = Field(
+        default_factory=list,
+        description=(
+            "Optional list of regex flags to modify matching behavior. "
+            "Available flags: IGNORECASE (I), MULTILINE (M), DOTALL (S)."
+        )
+    )
     settings: Settings
 
 class BuildRegexArgs(BaseModel):

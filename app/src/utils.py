@@ -1,5 +1,6 @@
 import yaml
 from pathlib import Path
+import re
 
 def load_yaml_prompt(file_path: str) -> str:
     """
@@ -28,3 +29,31 @@ def load_yaml_prompt(file_path: str) -> str:
             lines.append(f"## {key}\n{value}")
 
     return "\n\n".join(lines)
+
+
+def flag_value_calculator(flags: list[str]) -> int:
+    flag_value = 0
+    if flags:
+        flag_map = {
+            "I": re.IGNORECASE,
+            "M": re.MULTILINE,
+            "S": re.DOTALL,
+            "X": re.VERBOSE,
+        }
+        for flag in flags:
+            if flag in flag_map:
+                flag_value |= flag_map[flag]
+    return flag_value
+
+def truncate_matches(matches: list[str]) -> tuple[list[str], bool]:
+    truncated = False
+    truncated_matches = []
+    for match in matches:
+        if isinstance(match, str) and len(match) > 100:
+            truncated_matches.append(match[:100] + "...")
+            truncated = True
+        else:
+            truncated_matches.append(match)
+    matches = truncated_matches
+    
+    return matches, truncated

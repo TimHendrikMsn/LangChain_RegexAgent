@@ -1,6 +1,6 @@
 from src.settings import Settings, settings, build_regex_settings
 from src.schemas import  RunRegexArgs, BuildRegexArgs
-from src.utils import load_yaml_prompt
+from src.utils import load_yaml_prompt, flag_value_calculator, truncate_matches
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -47,19 +47,22 @@ def build_regex(question: str, flags_hint: Optional[str] = None) -> str:
 def run_regex(
     pattern: str,
     match_type: Literal["all", "first", "last"] = "all",
+    flags: list[Literal["I", "M", "S"]] = [],
     settings: Settings = settings,
 ) -> dict[str, str]:
     """
     Searches a document for matches to a regex pattern. Returns a match dictionary.
+    Supports optional regex flags (I, M, S).
     """
     document = open(settings.document_path, "r", encoding="utf-8").read()
+    flag_value = flag_value_calculator(flags)
+
     try:
-        compiled = re.compile(pattern)
+        compiled = re.compile(pattern, flags=flag_value)
     except re.error as e:
         return {"error": f"Invalid regex pattern: {e}", "pattern": pattern}
 
     matches = [m.group(0) for m in compiled.finditer(document)]
-
     count = len(matches)
 
     if count == 0:
@@ -72,16 +75,10 @@ def run_regex(
         else:
             matches_needed = matches
 
-    truncated = False
     if matches_needed:
-        truncated_matches = []
-        for match in matches_needed:
-            if isinstance(match, str) and len(match) > 100:
-                truncated_matches.append(match[:100] + "...")
-                truncated = True
-            else:
-                truncated_matches.append(match)
-        matches_needed = truncated_matches
+        matches_needed, truncated = truncate_matches(matches_needed)
+    else:
+        truncated = False
 
     return {"matches": matches_needed, "count": count, "truncated_matches": truncated}
 
