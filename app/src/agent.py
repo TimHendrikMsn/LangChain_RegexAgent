@@ -24,7 +24,7 @@ tool_call_limit = ToolCallLimitMiddleware(
     )
 
 agent = create_agent(
-    model=settings.model_name,
+    model=model,
     system_prompt=load_yaml_prompt(settings.system_prompt_path),
     tools=[
         build_regex,
