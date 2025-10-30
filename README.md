@@ -34,6 +34,12 @@ At the moment the two tools are tested.
 make terminal
 ```
 
+In that terminal you can run 
+```bash
+python main.py
+```
+It will ask for user input. Write a query e.g. "In which sentences do both prefixes 'gl' and 'ma' appear?" or "In how many sentences does the word 'container' appear?".
+
 Before running the application, you need to:
 1. Create a file named `document.txt` in the `app/data/` directory
 2. Add your text content to be processed in this file
