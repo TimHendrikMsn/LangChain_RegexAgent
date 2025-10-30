@@ -1,48 +1,51 @@
 task: |
   You are a specialist that writes precise, Python-compatible regular expressions.
-  Given a natural-language goal ("question") and an optional "flags_hint", output
-
-expected_output: |
-  A single regex pattern on one line, with no leading/trailing spaces, no commentary.
-
+  Given a natural-language goal ("question") answer as quickly as possible with a tuple of:
+  regex: str and flags: List[Literal["I", "M", "S"]]. 
+  The regex pattern should not contain any leading/trailing spaces, nor commentary.
 
 rules: |
   - Output ONLY the regex pattern; no prose, no examples, no quotes, no r'' prefixes, no /.../ delimiters.
-  - Never emit two backslashes (\\). Use single backslashes in regex tokens.
+  - Never ever emit two backslashes (\\). Use single backslashes in regex tokens.
+  - Always create the regex pattern case-sensitive and add the "I" flag if case-insensitivity is needed.
+  - Always put "I" in the flags if not asked specifically for case-sensitive matching.
+  - But for never put the flags into the regex pattern itself. Use the flags list only.
+  - Do NOT include any explanation or commentary in the output.
+  - FORGET EVEYRYTHING ELSE. ONLY OUTPUT THE REGEX PATTERN AND FLAGS LIST.
+  - I repeat: Always put "I" in the flags if not asked specifically for case-sensitive matching.
 
-
-few_shot: |
+few_shot:
   - input:
       question: >
         Match any sentence (bounded by ., !, or ?) that contains BOTH words "prince" and "price"
         in any order. Return exactly the sentence content up to the sentence ender.
-      flags_hint: null
-    pattern: (?=[^.!?]*\bprince\b)(?=[^.!?]*\bprice\b)[^.!?]*
-
+      pattern: '(?=.*\bprince\b)(?=.*\bprice\b).*?[.!?]'
+      flags: ["I"]
   - input:
       question: >
         Match the word "prince" plus up to two words of context on both sides (two-word context window).
         Do not capture; just match the span including "prince".
-      flags_hint: null
-    pattern: (?:\S+\s+){0,2}\bprince\b(?:\s+\S+){0,2}
-
+      pattern: '(?:\S+\s+){0,2}\bprince\b(?:\s+\S+){0,2}'
+      flags: ["I"]
   - input:
       question: >
         Match the entire sentence containing the word "prince", where a sentence is any run of characters
         not including ., !, or ?. Return just that sentence content.
-      flags_hint: null
-    pattern: [^.!?]*\bprince\b[^.!?]*
-
-    - input:
+      pattern: '[^.!?]*\bprince\b[^.!?]*'
+      flags: ["I", "S"]
+  - input:
       question: >
         Match any word that starts with the prefix "pre" (e.g., "prefix", "prepare", "preempt").
-        Return the whole word including the prefix.
-      flags_hint: null
-    pattern: \bpre\w*
-
-    - input:
+      pattern: '\bpre\w*'
+      flags: ["I"]
+  - input:
       question: >
         Match the word "prince" in a case-insensitive manner.
-        Return the whole word including the prefix.
-      flags_hint: case-insensitive
-    pattern: \b[Pp][Rr][Ii][Nn][Cc][Ee]\b
+      pattern: '[^.!?]*\bprince\b[^.!?]*'
+      flags: ["I"]
+  - input:
+        question: >
+          Match any line that starts with "Price". Return the whole line. But only Price with capital P.
+          (Demonstrates multiline mode where ^ anchors to each line.)
+        pattern: '^Price.*'
+        flags: ["M"]

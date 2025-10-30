@@ -1,5 +1,5 @@
 from src.settings import Settings, settings, build_regex_settings
-from src.schemas import  RunRegexArgs, BuildRegexArgs
+from src.schemas import  RunRegexArgs, BuildRegexArgs, BuildRegexResponse
 from src.utils import load_yaml_prompt, flag_value_calculator, truncate_matches
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
@@ -9,7 +9,7 @@ import os
 from typing import List, Literal, Optional, Dict
 
 @tool("build_regex", args_schema=BuildRegexArgs)
-def build_regex(question: str, flags_hint: Optional[str] = None) -> str:
+def build_regex(question: str) -> BuildRegexResponse:
     """
     Use an LLM to produce a Python-compatible regex pattern string ONLY.
     Returns the raw regex pattern (no code fences, no quotes).
@@ -21,26 +21,25 @@ def build_regex(question: str, flags_hint: Optional[str] = None) -> str:
         temperature=build_regex_settings.temperature,
         max_tokens=build_regex_settings.max_tokens,
         )
+    llm_structured_output = llm.with_structured_output(BuildRegexResponse)
+
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", "{system_prompt}"),
-            ("human", "{input}"),
+            ("user", "{input}"),
         ]
     )
-
     prompt_input = {
-        "input": question if not flags_hint else f"{question}\nFlags hint: {flags_hint}",
-        "system_prompt": load_yaml_prompt(settings.build_regex_tool_prompt_path)
+        "system_prompt": load_yaml_prompt(settings.build_regex_tool_prompt_path),
+        "input": {"question": question},
     }
-
-    chain = prompt | llm
+    chain = prompt | llm_structured_output
     resp = chain.invoke(prompt_input)
 
-    pattern = resp.content.strip().strip("`").strip()
-
-    if pattern.startswith(("r'", 'r"', "'", '"')) and pattern.endswith(("'", '"')):
-        pattern = pattern[2:-1] if pattern.startswith("r") else pattern[1:-1]
-    return pattern
+    resp.pattern = resp.pattern.strip().strip("`").strip()
+    if resp.pattern.startswith(("r'", 'r"', "'", '"')) and resp.pattern.endswith(("'", '"')):
+        resp.pattern = resp.pattern[2:-1] if resp.pattern.startswith("r") else resp.pattern[1:-1]
+    return resp
 
 
 @tool("run_regex", args_schema=RunRegexArgs)

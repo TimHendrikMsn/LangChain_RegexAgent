@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Literal, Union, List
 from src.settings import Settings
 
@@ -17,7 +17,7 @@ class RunRegexArgs(BaseModel):
             "Available flags: IGNORECASE (I), MULTILINE (M), DOTALL (S)."
         )
     )
-    settings: Settings
+    settings: Optional[Settings] = None
 
 class BuildRegexArgs(BaseModel):
     question: str = Field(
@@ -25,11 +25,16 @@ class BuildRegexArgs(BaseModel):
         description="Natural-language description of the pattern to match. "
                     "Include any constraints like anchors, groups, flags, etc."
     )
-    flags_hint: Optional[str] = Field(
-        default=None,
-        description="Optional hint for flags (e.g., 'case-insensitive', 'multiline')."
-    )
 
+class BuildRegexResponse(BaseModel):
+    pattern: str = Field(..., description="The generated regex pattern string.")
+    flags: List[Literal["I", "M", "S"]] = Field(
+        default_factory=list,
+        description=(
+            "List of regex flags inferred from the question. "
+            "Available flags: IGNORECASE (I), MULTILINE (M), DOTALL (S)."
+        )
+    )
 # Schema for agent responses
 class ToolCall(BaseModel):
     type: Literal["tool_call"] = "tool_call"

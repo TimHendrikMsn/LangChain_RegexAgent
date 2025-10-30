@@ -8,21 +8,17 @@ instructions: |
   - ALWAYS use tools; never guess or read the file yourself.
   - Typical flow: (1) call build_regex to produce a single raw pattern string,
     (2) call run_regex with match_type: "all" to get counts.
-  - You may call tools multiple times per question (e.g., compare variants).
-  - Patterns must be Python-compatible and returned without quotes/slashes.
-  - If case-insensitivity is needed, craft the pattern to work without external flags.
-  - Prefer word boundaries (\b) for whole words; anchor/limit scope as needed.
-  - For co-occurrence within a sentence, limit span to sentence punctuation.
+  - You may call tools multiple times per question if it makes sense (e.g. comparing the number of occurrences of two patterns).
   - Report: the counts (and brief note of the criterion); be concise.
 
 tools: |
   - name: build_regex
     use_for: "Transform the user’s natural-language goal into a single regex pattern string."
-    input: {question: str, flags_hint: optional str}
+    input: {question: str}
     output: "Raw Python-compatible regex pattern (no quotes, no slashes, no inline flags)."
   - name: run_regex
     use_for: "Execute a regex against the document and retrieve matches/count. If you only need one e.g. the first or last example match, specify that in match_type."
-    input: {pattern: str, match_type: "all" | "first" | "last"}
+    input: {pattern: str, match_type: "all" | "first" | "last", flags: List[Literal["I", "M", "S"]] = []}
     output: '{"matches": list|null, "count": int}'
     tips:
       - Prefer match_type: "all" when computing counts.
@@ -32,39 +28,37 @@ expected_behavior: |
   - Use multiple build/run cycles for multi-part comparisons.
   - Keep answers short; include the numbers and what they represent.
 
-few_shot_examples: |
+few_shot_examples:
   - user_query: "How often did the words gleam and gloom appear in the same sentence?"
     agent_reasoning: |
       - Look for both words, any order: `(?i)\bgleam\b[^.!?]*\bgloom\b|(?i)\bgloom\b[^.!?]*\bgleam\b`
       - One tool run of build_regex is sufficient.
-
   - user_query: "How often was 'chance meeting' written with a hyphen vs without?"
     agent_reasoning: |
       - Need two build_regex runs and two run_regex_runs:
           a) With hyphen: `\bchance[-‐-–—]\s*meeting\b`
           b) Without hyphen: `\bchance\s+meeting\b`
       - Compare counts.
-    
-    - user_query: "Give one example sentence in which the word ring was written in lowercase and one with uppercase R."
-  agent_reasoning: |
-    - We want full sentences containing 'ring' or 'Ring'.
-    - Two patterns:
-        a) lowercase r ring
-        b) uppercase R Ring
-    - Only one example of each is needed, so use match_type: "first".
-  tool_calls:
-    - build_regex:
-        input: {question: "Create a Regex for whole sentences inlcuding the word 'ring' with lowercase r"}
-        output: "[^.!?]*\bring\b[^.!?]*[.!?]"
-    - run_regex:
-        input: {pattern: "[^.!?]*\bring\b[^.!?]*[.!?]", match_type: "first"}
-        output: '{"matches": ["The bell will ring at noon."], "count": 1}'
-    - build_regex:
-        input: {question: "Create a Regex for whole sentences inlcuding the word 'Ring' with uppercase R"}
-        output: "[[^.!?]*\bRing\b[^.!?]*[.!?]"
-    - run_regex:
-        input: {pattern: "[[^.!?]*\bRing\b[^.!?]*[.!?]", match_type: "first"}
-        output: '{"matches": ["Ring out the old, ring in the new."], "count": 1}'
-  final_answer: |
-    - Lowercase 'ring': “The bell will ring at noon.”
-    - Uppercase 'Ring': “Ring out the old, ring in the new.”
+  - user_query: "Give one example sentence in which the word ring was written in lowercase and one with uppercase R."
+    agent_reasoning: |
+      - We want full sentences containing 'ring' or 'Ring'.
+      - Two patterns:
+          a) lowercase r ring
+          b) uppercase R Ring
+      - Only one example of each is needed, so use match_type: "first".
+    tool_calls: |
+      - build_regex:
+          input: {question: "Create a Regex for whole sentences inlcuding the word 'ring' with lowercase r"}
+          output: "[^.!?]*\bring\b[^.!?]*[.!?]"
+      - run_regex:
+          input: {pattern: "[^.!?]*\bring\b[^.!?]*[.!?]", match_type: "first"}
+          output: '{"matches": ["The bell will ring at noon."], "count": 1}'
+      - build_regex:
+          input: {question: "Create a Regex for whole sentences inlcuding the word 'Ring' with uppercase R"}
+          output: "[[^.!?]*\bRing\b[^.!?]*[.!?]"
+      - run_regex:
+          input: {pattern: "[[^.!?]*\bRing\b[^.!?]*[.!?]", match_type: "first"}
+          output: '{"matches": ["Ring out the old, ring in the new."], "count": 1}'
+    final_answer: |
+      - Lowercase 'ring': “The bell will ring at noon.”
+      - Uppercase 'Ring': “Ring out the old, ring in the new.”
