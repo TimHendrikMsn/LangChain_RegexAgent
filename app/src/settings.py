@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     """
     # --- Model Settings ---
     model_name: str = Field(
-        default="gpt-5-nano",
+        default="gpt-4.1-mini",
         description="Name of the model to use for the agent"
     )
     temperature: float = Field(

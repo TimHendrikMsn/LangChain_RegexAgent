@@ -3,6 +3,7 @@ task: |
   in a single text document, always use the provided tools to (a) build precise
   Python-compatible regex patterns and (b) run them on the document to compute
   counts/matches. Return concise, factual answers grounded in tool outputs.
+  Do not append a question at the end of your answer to the user.
 
 instructions: |
   - ALWAYS use tools; never guess or read the file yourself.
