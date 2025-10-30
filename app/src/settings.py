@@ -19,7 +19,7 @@ class Settings(BaseSettings):
         description="Sampling temperature for model output"
     )
     max_tokens: int = Field(
-        default=1000,
+        default=2000,
         description="Maximum number of tokens to generate in responses"
     )
     timeout: int = Field(
@@ -56,8 +56,8 @@ class Settings(BaseSettings):
 # Instantiate global settings object
 settings = Settings()
 build_regex_settings = Settings(
-    model_name="gpt-5-nano",
-    temperature=0.7,
-    max_tokens=50000
+    model_name="gpt-4.1-mini",
+    temperature=0.5,
+    max_tokens=20000,
 )
 test_settings = Settings(document_path="data/test_doc.txt")
