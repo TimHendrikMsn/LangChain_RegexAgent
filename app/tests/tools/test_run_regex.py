@@ -66,13 +66,13 @@ def test_invoke_contextual_match():
 
 
 def test_invoke_multiple_word_context():
-    pattern = r"(?=[^.!?]*\bgloom\b)(?=[^.!?]*\bgleam\b)[^.!?]*"
-    result = run_regex.invoke({"pattern": pattern, "match_type": "all", "settings": test_settings})
+    pattern = r"(?=.*\bgloom\b)(?=.*\bgleam\b).*?[.!?]"
+    result = run_regex.invoke({"pattern": pattern, "match_type": "all", "flags": ["I"], "settings": test_settings})
     assert isinstance(result, dict)
     assert result["count"] == 2
     assert result["matches"] == [
-        "\nSome lines mention gloom and gleam",
-        "\nThe word gloom appears as often as gleam in this document"
+        'Some lines mention gloom and gleam.', 
+        'The word gloom appears as often as gleam in this document.'
     ]
     assert isinstance(result["truncated_matches"], bool)
     assert result["truncated_matches"] is False
