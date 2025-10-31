@@ -40,6 +40,10 @@ class Settings(BaseSettings):
         default="data/document.txt",
         description="Path to the document to be processed"
     )
+    chroma_path: str = Field(
+        default="chroma",
+        description="Path to the chroma database"
+    )
 
     # --- Middleware Settings ---
     thread_limit: int = Field(

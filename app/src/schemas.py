@@ -35,11 +35,19 @@ class BuildRegexResponse(BaseModel):
             "Available flags: IGNORECASE (I), MULTILINE (M), DOTALL (S)."
         )
     )
+class RunRagArgs(BaseModel):
+    query: str = Field(
+        ...,
+        description="The user's natural language query to be answered using RAG.",
+    )
+    k: int = Field(..., ge=1, le=10, description="Number of top chunks to retrieve (1–10).")
+
+
 # Schema for agent responses
 class ToolCall(BaseModel):
     type: Literal["tool_call"] = "tool_call"
-    name: Literal["build_regex", "run_regex"]
-    args: Union[BuildRegexArgs, RunRegexArgs]
+    name: Literal["build_regex", "run_regex", "run_rag"]
+    args: Union[BuildRegexArgs, RunRegexArgs, RunRagArgs]
     id: Optional[str] = None
 
 class ModelResponseContent(BaseModel):

@@ -1,6 +1,7 @@
 from src.settings import Settings, settings, build_regex_settings
-from src.schemas import  RunRegexArgs, BuildRegexArgs, BuildRegexResponse
+from src.schemas import  RunRegexArgs, BuildRegexArgs, BuildRegexResponse, RunRagArgs
 from src.utils import load_yaml_prompt, flag_value_calculator, truncate_matches
+from src.rag.rag import load_database, most_relevant_k_chunks
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -81,3 +82,19 @@ def run_regex(
 
     return {"matches": matches_needed, "count": count, "truncated_matches": truncated}
 
+
+@tool("run_rag", args_schema=RunRagArgs)
+def run_rag(query: str, k: int) -> str:
+    """
+    Executes a Retrieval-Augmented Generation (RAG) query using the configured retrieval and LLM settings.
+    Takes a natural language question, retrieves the most relevant context from the document or vector store,
+    and generates a synthesized, context-aware response.
+
+    Returns a structured response containing the generated answer and optionally the retrieved context data.
+    """
+    db = load_database(path=settings.chroma_path)
+    text = most_relevant_k_chunks(query, db, k)
+    return text
+
+
+    
