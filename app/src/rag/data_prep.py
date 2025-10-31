@@ -17,13 +17,12 @@ def load_document(path):
 def split_text(document):
     """Split document into overlapping text chunks."""
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=100,
+        chunk_size=settings.chunk_size,
+        chunk_overlap=settings.chunk_overlap,
         length_function=len,
         add_start_index=True,
     )
     chunks = text_splitter.split_documents(document)
-    print(f"Split {len(document)} documents into {len(chunks)} chunks.")
 
     return chunks
 

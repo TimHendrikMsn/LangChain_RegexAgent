@@ -55,6 +55,17 @@ class Settings(BaseSettings):
         description="Maximum tool calls per single invocation"
     )
 
+    # --- RAG_settings ---
+    chunk_size: int = Field(
+        default=1000,
+        description="Number of letters per chunk after splitting a document"
+    )
+
+    chunk_overlap: : int = Field(
+        default=100,
+        description="Number of letters of overlap between chunk after splitting a document"
+    )
+
 
 
 # Instantiate global settings object
