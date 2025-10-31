@@ -6,7 +6,7 @@ from langchain.agents.middleware import ToolCallLimitMiddleware
 
 from src.settings import settings
 from src.utils import load_yaml_prompt
-from src.tools import  build_regex, run_regex
+from src.tools import  build_regex, run_regex, run_rag
 from src.schemas import  ModelResponseContent, ToolCall, StreamResponse
 
 
@@ -28,7 +28,8 @@ agent = create_agent(
     system_prompt=load_yaml_prompt(settings.system_prompt_path),
     tools=[
         build_regex,
-        run_regex
+        run_regex,
+        run_rag
     ],
     checkpointer=InMemorySaver(), 
     middleware=[tool_call_limit]

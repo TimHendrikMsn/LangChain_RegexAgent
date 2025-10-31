@@ -23,9 +23,18 @@ tools: |
     output: '{"matches": list|null, "count": int}'
     tips:
       - Prefer match_type: "all" when computing counts.
+  - name: run_rag
+    use_for: "Execute a Retrieval-Augmented Generation (RAG) query over the document/vector store and synthesize an answer."
+    input:
+      query: str  # The user's natural-language question.
+      k:
+        type: int
+        min: 1
+        max: 10     # Number of top chunks to retrieve (1–10).
+    output: "str — synthesized answer text (may optionally include retrieved context)."
 
 expected_behavior: |
-  - Always chain tool calls; never answer without at least one run_regex result.
+  - You can chain tool calls; after using build_regex, never answer without at least one run_regex result.
   - Use multiple build/run cycles for multi-part comparisons.
   - Keep answers short; include the numbers and what they represent.
 
