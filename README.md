@@ -36,7 +36,7 @@ make terminal
 
 In that terminal you can run 
 ```bash
-python main.py
+uv run main.py
 ```
 It will ask for user input. Write a query e.g. "In which sentences do both prefixes 'gl' and 'ma' appear?" or "In how many sentences does the word 'container' appear?".
 
