@@ -6,16 +6,22 @@ This project utilizes LangChain to process text documents.
 - Docker
 - Make
 - OpenAI API Key
+- uv
 
 ## Setup
 0. You need to have Docker installed and the Docker Daemon needs to be running.
 
-1. Create a `.env` file in the root directory with your OpenAI API key:
+1. Install uv and initialize it inside the project folder.
+```bash
+uv init
+```
+
+2. Create a `.env` file in the root directory with your OpenAI API key:
 ```
 OPENAI_API_KEY=your_api_key_here
 ```
 
-2. Run the initial build:
+3. Run the initial build:
 ```bash
 make build
 ```
