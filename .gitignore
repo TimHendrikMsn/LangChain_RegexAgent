@@ -1,7 +1,18 @@
+# Version control
 .git
+
+# Environments and dependencies
 .env
+.venv/
+uv.lock
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+
+# Local or generated content
+chroma/
+
+# Temporary or personal files
 TODO.md
 document.txt
-__pycache__
-*.pyc
-chroma
