@@ -4,7 +4,6 @@
 # Environments and dependencies
 .env
 .venv/
-uv.lock
 
 # Python cache and compiled files
 __pycache__/
