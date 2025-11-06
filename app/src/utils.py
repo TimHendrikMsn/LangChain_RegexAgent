@@ -47,6 +47,9 @@ def flag_value_calculator(flags: list[str]) -> int:
 
 def truncate_matches(matches: list[str]) -> tuple[list[str], bool]:
     truncated = False
+    if len(matches) <= 15:
+        return matches, truncated
+
     truncated_matches = []
     for match in matches:
         if isinstance(match, str) and len(match) > 100:
