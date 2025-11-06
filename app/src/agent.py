@@ -1,7 +1,7 @@
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import InMemorySaver
-from langchain.agents.middleware import ToolCallLimitMiddleware
+from langchain.agents.middleware import ToolCallLimitMiddleware, ContextEditingMiddleware, ClearToolUsesEdit
 
 
 from src.settings import settings
@@ -22,6 +22,9 @@ tool_call_limit = ToolCallLimitMiddleware(
     run_limit=settings.run_limit,
     exit_behavior="end"
     )
+context_limit = ContextEditingMiddleware(
+                    edits=[ClearToolUsesEdit(trigger=200)],
+        )
 
 agent = create_agent(
     model=model,
@@ -32,7 +35,10 @@ agent = create_agent(
         run_rag
     ],
     checkpointer=InMemorySaver(), 
-    middleware=[tool_call_limit]
+    middleware=[
+        tool_call_limit,
+        context_limit
+    ]
     )
 
 def stream_agent_response(user_input: str, thread_id: str):
@@ -43,12 +49,16 @@ def stream_agent_response(user_input: str, thread_id: str):
     ):
         for step, data in chunk.items():
             if "Middleware" in step:
+                if data and data.get("jump_to", None) == "end":
+                    yield StreamResponse(
+                        step=step,
+                        content=ModelResponseContent(type="text", text="Tool call limits exceeded: Start a new thread.")
+                        )
                 continue
 
-            content = data['messages'][-1].content_blocks
-
-            if content and content[0]["type"] == "tool_call":
-                tool_call_data = content[0]
+            content_blocks = data["messages"][-1].content_blocks
+            if content_blocks and content_blocks[0]["type"] == "tool_call":
+                tool_call_data = content_blocks[0]
                 content = ToolCall(
                     type="tool_call",
                     name=tool_call_data.get("name"),
@@ -56,7 +66,7 @@ def stream_agent_response(user_input: str, thread_id: str):
                     id=tool_call_data.get("id")
                 )
             else:
-                content = ModelResponseContent(type="text", text=content[0].get("text") if content else None)
+                content = ModelResponseContent(type="text", text=content_blocks[0].get("text") if content_blocks else None)
 
             
             yield StreamResponse(step=step, content=content)

@@ -47,7 +47,7 @@ class Settings(BaseSettings):
 
     # --- Middleware Settings ---
     thread_limit: int = Field(
-        default=10,
+        default=20,
         description="Maximum tool calls across all runs in a thread"
     )
     run_limit: int = Field(
