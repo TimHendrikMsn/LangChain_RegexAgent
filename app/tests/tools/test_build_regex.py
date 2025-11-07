@@ -1,5 +1,5 @@
 # tests/test_run_regex_tool.py
-from src.tools import build_regex, run_regex
+from src.tools.tools import build_regex, run_regex
 from src.settings import Settings, test_settings
 
 

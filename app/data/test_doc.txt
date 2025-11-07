@@ -6,3 +6,23 @@ Gleam, on the other hand, suggests light.
 The word gloom appears as often as gleam in this document.
 This
 splitted line has to be truncated because it is way too long and exceeds the maximum length allowed for a single match in the run_regex tool.
+
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.
+Copying this line inlcuding the word "truncated" so that truncation happens as we have introduced a threshold for truncaton.

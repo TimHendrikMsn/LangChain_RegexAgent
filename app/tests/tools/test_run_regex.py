@@ -1,6 +1,6 @@
 # tests/test_run_regex_tool.py
 from src.settings import Settings
-from src.tools import run_regex
+from src.tools.tools import run_regex
 
 test_settings = Settings(document_path="data/test_doc.txt")
 
@@ -39,10 +39,10 @@ def test_invoke_no_matches():
 def test_invoke_truncated_match():
     result = run_regex.invoke({"pattern": r"[^.!?]*\btruncated\b[^.!?]*", "match_type": "all", "settings": test_settings})
     assert isinstance(result, dict)
-    assert result["count"] == 1
-    assert result["matches"] == ["\nThis\nsplitted line has to be truncated because it is way too long and exceeds the maximum length al..."]
+    assert result["count"] == 20
     assert isinstance(result["truncated_matches"], bool)
     assert result["truncated_matches"] is True
+    assert result["matches"][0] == "\nThis\nsplitted line has to be truncated because it is way too long and exceeds the maximum length al..."
 
 
 # Additional tests for more complex patterns
