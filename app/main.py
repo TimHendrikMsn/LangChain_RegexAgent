@@ -1,4 +1,4 @@
-from src.agent import stream_agent_response
+from src.llm.agent import stream_agent_response
 
 
 def main():
