@@ -1,6 +1,7 @@
 import yaml
 from pathlib import Path
 
+
 def load_yaml_prompt(file_path: str) -> str:
     """
     Loads a YAML file describing an agent prompt and returns a formatted string
@@ -28,4 +29,3 @@ def load_yaml_prompt(file_path: str) -> str:
             lines.append(f"## {key}\n{value}")
 
     return "\n\n".join(lines)
-

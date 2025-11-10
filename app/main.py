@@ -13,11 +13,14 @@ def main():
             if chunk.step == "model" and chunk.content.type == "text":
                 print(f"\nAgent:\t{chunk.content.text}\n")
             elif chunk.content.type == "tool_call":
-                print(f"\t- Tool Call:\n\t\t- Tool: {chunk.content.name}\n\t\t- Args: {chunk.content.args}\n")
+                print(
+                    f"\t- Tool Call:\n\t\t- Tool: {chunk.content.name}\n\t\t- Args: {chunk.content.args}\n"
+                )
             elif chunk.step == "tools":
                 print(f"\t- Tool Response:\n\t\t- Content: {chunk.content.text}\n")
             else:
                 print(f"\t- {chunk.step}:\n\t\t- Content: {chunk.content}\n")
+
 
 if __name__ == "__main__":
     main()
